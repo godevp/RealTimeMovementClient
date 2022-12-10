@@ -20,13 +20,14 @@ public class AnotherPlayer : MonoBehaviour
     void Start()
     {
         Sprite circleTexture = Resources.Load<Sprite>("Circle");
-        this.gameObject.AddComponent<SpriteRenderer>();
+        //this.gameObject.AddComponent<SpriteRenderer>();
         this.gameObject.GetComponent<SpriteRenderer>().sprite = circleTexture;
+        characterVelocityInPercent = Vector2.zero;
     }
 
     void Update()
     {
-        
+        Movement();
     }
     void Movement()
     {

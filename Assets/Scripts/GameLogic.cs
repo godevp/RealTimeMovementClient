@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GameLogic : MonoBehaviour
@@ -23,8 +24,21 @@ public class GameLogic : MonoBehaviour
         newCharacter.AddComponent<SpriteRenderer>();
         newCharacter.GetComponent<SpriteRenderer>().sprite = circleTexture;
         newCharacter.AddComponent<AnotherPlayer>();
+        newCharacter.GetComponent<AnotherPlayer>().id = id;
         playersList.Add(newCharacter);
 
+    }
+    public void SetAnotherPlayer(int id, float posX, float posY)
+    {
+        
+        foreach (GameObject player in playersList)
+        {
+            if (player.GetComponent<AnotherPlayer>().id == id)
+            {
+                Debug.Log("SettingAnotherPlayer");
+                player.GetComponent<AnotherPlayer>().characterPositionInPercent = new Vector2(posX + 1.0f, posY);
+            }
+        }
     }
     void Update()
     {

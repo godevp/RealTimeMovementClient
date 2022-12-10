@@ -24,7 +24,10 @@ static public class NetworkedClientProcessing
                 break;
             case ServerToClientSignifiers.SendBackID:
                 gameLogic.CreateNewCharacter(int.Parse(csv[1]));
-                gameLogic.playersList[0].GetComponent<AnotherPlayer>().id = int.Parse(csv[1]);
+                break;
+            case ServerToClientSignifiers.NewClientJoined:
+                gameLogic.CreateNewCharacter(int.Parse(csv[1]));
+                gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
                 break;
         }
 
