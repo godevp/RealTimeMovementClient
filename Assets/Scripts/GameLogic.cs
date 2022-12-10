@@ -8,14 +8,20 @@ public class GameLogic : MonoBehaviour
 
     Vector2 characterPositionInPercent;
     Vector2 characterVelocityInPercent;
-    const float CharacterSpeed = 0.25f;
+
+    bool pressedW = false;
+    bool pressedS = false;
+    bool pressedA = false;
+    bool pressedD = false;
+    float CharacterSpeed;
+    float fixedDeltaTime;
     float DiagonalCharacterSpeed;
 
     void Start()
     {
-        DiagonalCharacterSpeed = Mathf.Sqrt(CharacterSpeed * CharacterSpeed + CharacterSpeed * CharacterSpeed) /2f;
+        
         NetworkedClientProcessing.SetGameLogic(this);
-
+      
         Sprite circleTexture = Resources.Load<Sprite>("Circle");
 
         character = new GameObject("Character");
@@ -25,50 +31,103 @@ public class GameLogic : MonoBehaviour
     }
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D)
-            || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D))
-        {
+        PressingButtons();
             characterVelocityInPercent = Vector2.zero;
 
-            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D))
+            if (pressedW && pressedD)
             {
                 characterVelocityInPercent.x = DiagonalCharacterSpeed;
                 characterVelocityInPercent.y = DiagonalCharacterSpeed;
+                SendPlayersPositionToClient();
             }
-            else if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A))
+            else if (pressedW && pressedA)
             {
                 characterVelocityInPercent.x = -DiagonalCharacterSpeed;
                 characterVelocityInPercent.y = DiagonalCharacterSpeed;
-            }
-            else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D))
-            {
-                characterVelocityInPercent.x = DiagonalCharacterSpeed;
-                characterVelocityInPercent.y = -DiagonalCharacterSpeed;
-            }
-            else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A))
-            {
-                characterVelocityInPercent.x = -DiagonalCharacterSpeed;
-                characterVelocityInPercent.y = -DiagonalCharacterSpeed;
-            }
-            else if (Input.GetKey(KeyCode.D))
-                characterVelocityInPercent.x = CharacterSpeed;
-            else if (Input.GetKey(KeyCode.A))
-                characterVelocityInPercent.x = -CharacterSpeed;
-            else if (Input.GetKey(KeyCode.W))
-                characterVelocityInPercent.y = CharacterSpeed;
-            else if (Input.GetKey(KeyCode.S))
-                characterVelocityInPercent.y = -CharacterSpeed;
-        }
 
-        characterPositionInPercent += (characterVelocityInPercent * Time.deltaTime);
+            }
+            else if (pressedS && pressedD)
+            {
+                characterVelocityInPercent.x = DiagonalCharacterSpeed;
+                characterVelocityInPercent.y = -DiagonalCharacterSpeed;
+
+            }
+            else if (pressedS && pressedA)
+            {
+                characterVelocityInPercent.x = -DiagonalCharacterSpeed;
+                characterVelocityInPercent.y = -DiagonalCharacterSpeed;
+
+            }
+            else if (pressedD)
+                characterVelocityInPercent.x = CharacterSpeed;
+            else if (pressedA)
+                characterVelocityInPercent.x = -CharacterSpeed;
+            else if (pressedW)
+                characterVelocityInPercent.y = CharacterSpeed;
+            else if (pressedS)
+                characterVelocityInPercent.y = -CharacterSpeed;
+
+
+        characterPositionInPercent += (characterVelocityInPercent * fixedDeltaTime);
 
         Vector2 screenPos = new Vector2(characterPositionInPercent.x * (float)Screen.width, characterPositionInPercent.y * (float)Screen.height);
         Vector3 characterPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0));
         characterPos.z = 0;
         character.transform.position = characterPos;
 
+
+
     }
 
+    void PressingButtons()
+    {
+        //KeyDown
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            pressedW = true;
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            pressedS = true;
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            pressedD = true;
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            pressedA = true;
+        }
+
+        //KeyUp
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            pressedW = false;
+        }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            pressedS = false;
+        }
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            pressedD = false;
+        }
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            pressedA = false;
+        }
+
+    }
+    public void SendPlayersPositionToClient()
+    {
+        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPosition.ToString() + '|' + characterPositionInPercent.x + '|' + characterPositionInPercent.y);
+    }
+
+    public void SetSpeedDeltaTime(float fixedDeltaTime, float charSpeed)
+    {
+        this.fixedDeltaTime = fixedDeltaTime;
+        CharacterSpeed = charSpeed;
+        DiagonalCharacterSpeed = Mathf.Sqrt(CharacterSpeed * CharacterSpeed + CharacterSpeed * CharacterSpeed) / 2f;
+    }
 }
 

@@ -10,19 +10,22 @@ static public class NetworkedClientProcessing
     {
         Debug.Log("msg received = " + msg + ".");
 
-        string[] csv = msg.Split(',');
-        int signifier = int.Parse(csv[0]);
+        string[] csv = msg.Split('|');
+        int signifier = 0;
+        if (int.TryParse(csv[0], out _))
+        {
+            signifier = int.Parse(csv[0]);
+        }
+        switch (signifier)
+        {
+            case ServerToClientSignifiers.RequestForPositionAndGivingSpeed:
+                gameLogic.SetSpeedDeltaTime(float.Parse(csv[1]), float.Parse(csv[2]));
+                gameLogic.SendPlayersPositionToClient();
+                break;
 
-        // if (signifier == ServerToClientSignifiers.asd)
-        // {
+        }
 
-        // }
-        // else if (signifier == ServerToClientSignifiers.asd)
-        // {
-
-        // }
-
-        //gameLogic.DoSomething();
+       
 
     }
 
@@ -81,12 +84,13 @@ static public class NetworkedClientProcessing
 #region Protocol Signifiers
 static public class ClientToServerSignifiers
 {
-    public const int asd = 1;
+    public const int HereIsMyPosition = 1;
 }
 
 static public class ServerToClientSignifiers
 {
-    public const int asd = 1;
+    public const int RequestForPositionAndGivingSpeed = 1;
+    public const int NewClientJoined = 2;
 }
 
 #endregion
