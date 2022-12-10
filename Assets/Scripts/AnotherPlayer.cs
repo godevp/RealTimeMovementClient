@@ -22,7 +22,7 @@ public class AnotherPlayer : MonoBehaviour
         characterVelocityInPercent = Vector2.zero;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Movement();
     }

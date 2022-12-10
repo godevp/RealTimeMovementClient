@@ -34,7 +34,6 @@ public class GameLogic : MonoBehaviour
     
     public void SetAnotherPlayer(int id, float posX, float posY)
     {
-        Debug.Log("X: "+ posX + " Y : " + posY);
         foreach (GameObject player in playersList)
         {
             if (player.GetComponent<AnotherPlayer>().id == id)
@@ -72,36 +71,36 @@ public class GameLogic : MonoBehaviour
         //KeyUp
         if (Input.GetKeyUp(KeyCode.W))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "W");
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "W"
+                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
+                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "S");
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "S"
+                                                                             + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
+                                                                             + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "D");
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "D"
+                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
+                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A");
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A"
+                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
+                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
         }
 
     }
-    public void SendPlayersPositionToServer(bool forExisting)
+    public void SendPlayersPositionToServer()
     {
-        if(!forExisting)
-        {
+
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPosition.ToString() +
                                                         '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x +
                                                         '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
-        }
-        else
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPositionForJustUpdate.ToString() +
-                                                        '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x +
-                                                        '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
-        }
         
     }
     public void SetButtonPressed(int id, string button)

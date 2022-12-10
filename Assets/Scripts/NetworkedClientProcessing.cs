@@ -20,10 +20,7 @@ static public class NetworkedClientProcessing
         {
             case ServerToClientSignifiers.RequestForPositionAndGivingSpeed:
                 gameLogic.SetSpeedDeltaTime(float.Parse(csv[1]), float.Parse(csv[2]));
-                gameLogic.SendPlayersPositionToServer(false);
-                break;
-            case ServerToClientSignifiers.RequestForExistingClientsPosUpdate:
-                gameLogic.SendPlayersPositionToServer(true);
+                gameLogic.SendPlayersPositionToServer();
                 break;
             case ServerToClientSignifiers.SendBackID:
                 gameLogic.CreateNewCharacter(int.Parse(csv[1]));
@@ -109,7 +106,6 @@ static public class ClientToServerSignifiers
     public const int HereIsMyPosition = 1;
     public const int PressedButton = 2;
     public const int ButtonReleased = 3;
-    public const int HereIsMyPositionForJustUpdate = 4;
 }
 
 static public class ServerToClientSignifiers
@@ -120,8 +116,7 @@ static public class ServerToClientSignifiers
     public const int PressButton = 4;
     public const int ReleaseButton = 5;
     public const int SendAllClients = 6;
-    public const int RequestForExistingClientsPosUpdate = 7;
-    public const int HereNewDataForPlayerByTheID = 8;
+    public const int HereNewDataForPlayerByTheID = 7;
 }
 
 #endregion
