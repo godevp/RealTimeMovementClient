@@ -26,10 +26,7 @@ public class GameLogic : MonoBehaviour
         newCharacter.GetComponent<SpriteRenderer>().sprite = circleTexture;
         newCharacter.AddComponent<AnotherPlayer>();
         newCharacter.GetComponent<AnotherPlayer>().id = id;
-       
-
         playersList.Add(newCharacter);
-
     }
     
     public void SetAnotherPlayer(int id, float posX, float posY)
@@ -44,54 +41,70 @@ public class GameLogic : MonoBehaviour
     }
     void Update()
     {
-        
         PressingButtons();
     }
 
     void PressingButtons()
     {
+        
         //KeyDown
-        if(Input.GetKeyDown(KeyCode.W))
+        if(Input.GetKey(KeyCode.W) &&!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
         {
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "W");
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
         {
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "S");
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
         {
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "D");
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
         {
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "A");
         }
+        if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D))
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "WD");
+        }
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A))
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "WA");
+        }
+
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D))
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "SD");
+        }
+
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A))
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "SA");
+        }
+
+
 
         //KeyUp
         if (Input.GetKeyUp(KeyCode.W))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "W"
-                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
-                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "W");
+                                                                           
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "S"
-                                                                             + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
-                                                                             + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "S");
+                                                                             
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "D"
-                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
-                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "D");
+                                                                           
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A"
-                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x
-                                                                            + '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A");
+                                                                           
         }
 
     }
@@ -103,57 +116,19 @@ public class GameLogic : MonoBehaviour
                                                         '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
         
     }
-    public void SetButtonPressed(int id, string button)
+    public void SetCertainPlayerPos(int id,float x, float y)
     {
-        switch (button)
-        {
-            case "W":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedW = true;
-                break;
-            case "S":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedS = true;
-                break;
-            case "D":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedD = true;
-                break;
-            case "A":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedA = true;
-                break;
-        }
-    }
-    public void SetButtonReleased(int id, string button)
-    {
-        switch (button)
-        {
-            case "W":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedW = false;
-                break;
-            case "S":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedS = false;
-                break;
-            case "D":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedD = false;
-                break;
-            case "A":
-                if (ForeachForButtons(id) != null)
-                    ForeachForButtons(id).GetComponent<AnotherPlayer>().pressedA = false;
-                break;
-        }
-    }
+        if(FindPlayerGameObjectByID(id) != null)
+        FindPlayerGameObjectByID(id).GetComponent<AnotherPlayer>().characterPositionInPercent = new Vector2(x, y);
+    }    
+   
     public void DestroyByID(int id)
     {
-        var temp = ForeachForButtons(id);
-        playersList.Remove(ForeachForButtons(id));
+        var temp = FindPlayerGameObjectByID(id);
+        playersList.Remove(FindPlayerGameObjectByID(id));
         Destroy(temp);
     }
-    public GameObject ForeachForButtons(int id)
+    public GameObject FindPlayerGameObjectByID(int id)
     {
         GameObject temp = null;
         foreach(GameObject player in playersList)
@@ -164,12 +139,6 @@ public class GameLogic : MonoBehaviour
             }
         }
         return temp;
-    }
-    public void SetSpeedDeltaTime(float fixedDeltaTime, float charSpeed)
-    {
-        this.fixedDeltaTime = fixedDeltaTime;
-        CharacterSpeed = charSpeed;
-        DiagonalCharacterSpeed = Mathf.Sqrt(CharacterSpeed * CharacterSpeed + CharacterSpeed * CharacterSpeed) / 2f;
     }
 }
 
