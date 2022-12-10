@@ -27,13 +27,14 @@ public class GameLogic : MonoBehaviour
         newCharacter.AddComponent<AnotherPlayer>();
         newCharacter.GetComponent<AnotherPlayer>().id = id;
        
+
         playersList.Add(newCharacter);
 
     }
     
     public void SetAnotherPlayer(int id, float posX, float posY)
     {
-        
+        Debug.Log("X: "+ posX + " Y : " + posY);
         foreach (GameObject player in playersList)
         {
             if (player.GetComponent<AnotherPlayer>().id == id)
@@ -44,7 +45,7 @@ public class GameLogic : MonoBehaviour
     }
     void Update()
     {
-        //ForeachForButtons(1).GetComponent<AnotherPlayer>().SetVariables(this.CharacterSpeed, this.fixedDeltaTime);
+        
         PressingButtons();
     }
 
@@ -87,11 +88,21 @@ public class GameLogic : MonoBehaviour
         }
 
     }
-    public void SendPlayersPositionToClient()
+    public void SendPlayersPositionToServer(bool forExisting)
     {
-        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPosition.ToString() +
+        if(!forExisting)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPosition.ToString() +
                                                         '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x +
                                                         '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
+        }
+        else
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPositionForJustUpdate.ToString() +
+                                                        '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x +
+                                                        '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
+        }
+        
     }
     public void SetButtonPressed(int id, string button)
     {

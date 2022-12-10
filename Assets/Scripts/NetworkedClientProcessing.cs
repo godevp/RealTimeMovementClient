@@ -8,7 +8,7 @@ static public class NetworkedClientProcessing
     #region Send and Receive Data Functions
     static public void ReceivedMessageFromServer(string msg)
     {
-       Debug.Log("msg received = " + msg + ".");
+       //Debug.Log("msg received = " + msg + ".");
 
         string[] csv = msg.Split('|');
         int signifier = 0;
@@ -20,7 +20,10 @@ static public class NetworkedClientProcessing
         {
             case ServerToClientSignifiers.RequestForPositionAndGivingSpeed:
                 gameLogic.SetSpeedDeltaTime(float.Parse(csv[1]), float.Parse(csv[2]));
-                gameLogic.SendPlayersPositionToClient();
+                gameLogic.SendPlayersPositionToServer(false);
+                break;
+            case ServerToClientSignifiers.RequestForExistingClientsPosUpdate:
+                gameLogic.SendPlayersPositionToServer(true);
                 break;
             case ServerToClientSignifiers.SendBackID:
                 gameLogic.CreateNewCharacter(int.Parse(csv[1]));
@@ -36,6 +39,13 @@ static public class NetworkedClientProcessing
                 break;
             case ServerToClientSignifiers.ReleaseButton:
                 gameLogic.SetButtonReleased(int.Parse(csv[1]), csv[2]);
+                break;
+            case ServerToClientSignifiers.SendAllClients:
+                gameLogic.CreateNewCharacter(int.Parse(csv[1]));
+                gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
+                break;
+            case ServerToClientSignifiers.HereNewDataForPlayerByTheID:
+                gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
                 break;
         }
 
@@ -99,6 +109,7 @@ static public class ClientToServerSignifiers
     public const int HereIsMyPosition = 1;
     public const int PressedButton = 2;
     public const int ButtonReleased = 3;
+    public const int HereIsMyPositionForJustUpdate = 4;
 }
 
 static public class ServerToClientSignifiers
@@ -108,6 +119,9 @@ static public class ServerToClientSignifiers
     public const int SendBackID = 3;
     public const int PressButton = 4;
     public const int ReleaseButton = 5;
+    public const int SendAllClients = 6;
+    public const int RequestForExistingClientsPosUpdate = 7;
+    public const int HereNewDataForPlayerByTheID = 8;
 }
 
 #endregion
