@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 static public class NetworkedClientProcessing
@@ -43,6 +44,9 @@ static public class NetworkedClientProcessing
                 break;
             case ServerToClientSignifiers.HereNewDataForPlayerByTheID:
                 gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
+                break;
+            case ServerToClientSignifiers.DestroyCertainPlayer:
+                gameLogic.DestroyByID(int.Parse(csv[1]));
                 break;
         }
 
@@ -117,6 +121,7 @@ static public class ServerToClientSignifiers
     public const int ReleaseButton = 5;
     public const int SendAllClients = 6;
     public const int HereNewDataForPlayerByTheID = 7;
+    public const int DestroyCertainPlayer = 8;
 }
 
 #endregion

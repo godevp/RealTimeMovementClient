@@ -147,7 +147,12 @@ public class GameLogic : MonoBehaviour
                 break;
         }
     }
-
+    public void DestroyByID(int id)
+    {
+        var temp = ForeachForButtons(id);
+        playersList.Remove(ForeachForButtons(id));
+        Destroy(temp);
+    }
     public GameObject ForeachForButtons(int id)
     {
         GameObject temp = null;
