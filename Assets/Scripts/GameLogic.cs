@@ -30,6 +30,7 @@ public class GameLogic : MonoBehaviour
         playersList.Add(newCharacter);
 
     }
+    
     public void SetAnotherPlayer(int id, float posX, float posY)
     {
         
@@ -154,12 +155,6 @@ public class GameLogic : MonoBehaviour
         this.fixedDeltaTime = fixedDeltaTime;
         CharacterSpeed = charSpeed;
         DiagonalCharacterSpeed = Mathf.Sqrt(CharacterSpeed * CharacterSpeed + CharacterSpeed * CharacterSpeed) / 2f;
-    }
-
-    public void SetSpeedAndDeltaTimeToThePlayerByIndex(int index)
-    {
-        Debug.Log("SPEED NOW : " + this.CharacterSpeed);
-        ForeachForButtons(index).GetComponent<AnotherPlayer>().SetVariables(this.CharacterSpeed,this.fixedDeltaTime);
     }
 }
 

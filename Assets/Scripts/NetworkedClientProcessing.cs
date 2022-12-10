@@ -24,16 +24,15 @@ static public class NetworkedClientProcessing
                 break;
             case ServerToClientSignifiers.SendBackID:
                 gameLogic.CreateNewCharacter(int.Parse(csv[1]));
-                gameLogic.SetSpeedAndDeltaTimeToThePlayerByIndex(int.Parse(csv[1]));
+                
                 break;
             case ServerToClientSignifiers.NewClientJoined:
                 gameLogic.CreateNewCharacter(int.Parse(csv[1]));
                 gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
-                gameLogic.SetSpeedAndDeltaTimeToThePlayerByIndex(int.Parse(csv[1]));
+                
                 break;
             case ServerToClientSignifiers.PressButton:
                 gameLogic.SetButtonPressed(int.Parse(csv[1]), csv[2]);
-                gameLogic.SetSpeedAndDeltaTimeToThePlayerByIndex(int.Parse(csv[1]));
                 break;
             case ServerToClientSignifiers.ReleaseButton:
                 gameLogic.SetButtonReleased(int.Parse(csv[1]), csv[2]);
@@ -76,7 +75,7 @@ static public class NetworkedClientProcessing
 
     #region Setup
     static NetworkedClient networkedClient;
-    static GameLogic gameLogic;
+    public static GameLogic gameLogic;
 
     static public void SetNetworkedClient(NetworkedClient NetworkedClient)
     {

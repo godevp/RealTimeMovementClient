@@ -13,9 +13,6 @@ public class AnotherPlayer : MonoBehaviour
     public bool pressedS = false;
     public bool pressedA = false;
     public bool pressedD = false;
-    public float speed;
-    public float fxdDeltaTime;
-    public float DiagonalCharacterSpeed;
 
     void Start()
     {
@@ -35,49 +32,44 @@ public class AnotherPlayer : MonoBehaviour
 
         if (pressedW && pressedD)
         {
-            characterVelocityInPercent.x = DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.y = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
            
         }
         else if (pressedW && pressedA)
         {
-            characterVelocityInPercent.x = -DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.y = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
 
         }
         else if (pressedS && pressedD)
         {
-            characterVelocityInPercent.x = DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = -DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.y = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
 
         }
         else if (pressedS && pressedA)
         {
-            characterVelocityInPercent.x = -DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = -DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.y = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
 
         }
         else if (pressedD)
-            characterVelocityInPercent.x = speed;
+            characterVelocityInPercent.x = NetworkedClientProcessing.gameLogic.CharacterSpeed;
         else if (pressedA)
-            characterVelocityInPercent.x = -speed;
+            characterVelocityInPercent.x = -NetworkedClientProcessing.gameLogic.CharacterSpeed;
         else if (pressedW)
-            characterVelocityInPercent.y = speed;
+            characterVelocityInPercent.y = NetworkedClientProcessing.gameLogic.CharacterSpeed;
         else if (pressedS)
-            characterVelocityInPercent.y = -speed;
+            characterVelocityInPercent.y = -NetworkedClientProcessing.gameLogic.CharacterSpeed;
 
 
-        characterPositionInPercent += (characterVelocityInPercent * speed);
+        characterPositionInPercent += (characterVelocityInPercent * NetworkedClientProcessing.gameLogic.fixedDeltaTime);
 
         Vector2 screenPos = new Vector2(characterPositionInPercent.x * (float)Screen.width, characterPositionInPercent.y * (float)Screen.height);
         Vector3 characterPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0));
         characterPos.z = 0;
         this.gameObject.transform.position = characterPos;
     }
-    public void SetVariables(float CharacterSpeed, float fixedDeltaTime)
-    {
-        speed = CharacterSpeed;
-        fxdDeltaTime = fixedDeltaTime;
-        DiagonalCharacterSpeed = Mathf.Sqrt(CharacterSpeed * CharacterSpeed + CharacterSpeed * CharacterSpeed) / 2f;
-    }
+
 }
