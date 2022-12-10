@@ -22,10 +22,12 @@ static public class NetworkedClientProcessing
                 gameLogic.SetSpeedDeltaTime(float.Parse(csv[1]), float.Parse(csv[2]));
                 gameLogic.SendPlayersPositionToClient();
                 break;
-
+            case ServerToClientSignifiers.SendBackID:
+                gameLogic.CreateNewCharacter(int.Parse(csv[1]));
+                gameLogic.playersList[0].GetComponent<AnotherPlayer>().id = int.Parse(csv[1]);
+                break;
         }
 
-       
 
     }
 
@@ -85,12 +87,15 @@ static public class NetworkedClientProcessing
 static public class ClientToServerSignifiers
 {
     public const int HereIsMyPosition = 1;
+    public const int PressedButton = 2;
+    public const int ButtonReleased = 3;
 }
 
 static public class ServerToClientSignifiers
 {
     public const int RequestForPositionAndGivingSpeed = 1;
     public const int NewClientJoined = 2;
+    public const int SendBackID = 3;
 }
 
 #endregion

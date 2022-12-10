@@ -4,79 +4,31 @@ using UnityEngine;
 
 public class GameLogic : MonoBehaviour
 {
-    GameObject character;
+    GameObject character; // TO DO: CREATE LIST OF THESE and use it
+    public List<GameObject> playersList;
 
-    Vector2 characterPositionInPercent;
-    Vector2 characterVelocityInPercent;
-
-    bool pressedW = false;
-    bool pressedS = false;
-    bool pressedA = false;
-    bool pressedD = false;
     float CharacterSpeed;
     float fixedDeltaTime;
     float DiagonalCharacterSpeed;
 
     void Start()
     {
-        
+        playersList = new List<GameObject>();
         NetworkedClientProcessing.SetGameLogic(this);
-      
+    }
+    public void CreateNewCharacter(int id)
+    {
         Sprite circleTexture = Resources.Load<Sprite>("Circle");
+        GameObject newCharacter = new GameObject("Character_" + id);
+        newCharacter.AddComponent<SpriteRenderer>();
+        newCharacter.GetComponent<SpriteRenderer>().sprite = circleTexture;
+        newCharacter.AddComponent<AnotherPlayer>();
+        playersList.Add(newCharacter);
 
-        character = new GameObject("Character");
-
-        character.AddComponent<SpriteRenderer>();
-        character.GetComponent<SpriteRenderer>().sprite = circleTexture;
     }
     void Update()
     {
         PressingButtons();
-            characterVelocityInPercent = Vector2.zero;
-
-            if (pressedW && pressedD)
-            {
-                characterVelocityInPercent.x = DiagonalCharacterSpeed;
-                characterVelocityInPercent.y = DiagonalCharacterSpeed;
-                SendPlayersPositionToClient();
-            }
-            else if (pressedW && pressedA)
-            {
-                characterVelocityInPercent.x = -DiagonalCharacterSpeed;
-                characterVelocityInPercent.y = DiagonalCharacterSpeed;
-
-            }
-            else if (pressedS && pressedD)
-            {
-                characterVelocityInPercent.x = DiagonalCharacterSpeed;
-                characterVelocityInPercent.y = -DiagonalCharacterSpeed;
-
-            }
-            else if (pressedS && pressedA)
-            {
-                characterVelocityInPercent.x = -DiagonalCharacterSpeed;
-                characterVelocityInPercent.y = -DiagonalCharacterSpeed;
-
-            }
-            else if (pressedD)
-                characterVelocityInPercent.x = CharacterSpeed;
-            else if (pressedA)
-                characterVelocityInPercent.x = -CharacterSpeed;
-            else if (pressedW)
-                characterVelocityInPercent.y = CharacterSpeed;
-            else if (pressedS)
-                characterVelocityInPercent.y = -CharacterSpeed;
-
-
-        characterPositionInPercent += (characterVelocityInPercent * fixedDeltaTime);
-
-        Vector2 screenPos = new Vector2(characterPositionInPercent.x * (float)Screen.width, characterPositionInPercent.y * (float)Screen.height);
-        Vector3 characterPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0));
-        characterPos.z = 0;
-        character.transform.position = characterPos;
-
-
-
     }
 
     void PressingButtons()
@@ -84,50 +36,51 @@ public class GameLogic : MonoBehaviour
         //KeyDown
         if(Input.GetKeyDown(KeyCode.W))
         {
-            pressedW = true;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "W");
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            pressedS = true;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "S");
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            pressedD = true;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "D");
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            pressedA = true;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "A");
         }
 
         //KeyUp
         if (Input.GetKeyUp(KeyCode.W))
         {
-            pressedW = false;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "W");
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
-            pressedS = false;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "S");
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
-            pressedD = false;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "D");
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
-            pressedA = false;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A");
         }
 
     }
     public void SendPlayersPositionToClient()
     {
-        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPosition.ToString() + '|' + characterPositionInPercent.x + '|' + characterPositionInPercent.y);
+        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.HereIsMyPosition.ToString() +
+                                                        '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.x +
+                                                        '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
     }
 
     public void SetSpeedDeltaTime(float fixedDeltaTime, float charSpeed)
     {
         this.fixedDeltaTime = fixedDeltaTime;
         CharacterSpeed = charSpeed;
-        DiagonalCharacterSpeed = Mathf.Sqrt(CharacterSpeed * CharacterSpeed + CharacterSpeed * CharacterSpeed) / 2f;
     }
 }
 
