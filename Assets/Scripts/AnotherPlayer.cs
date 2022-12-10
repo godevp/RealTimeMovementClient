@@ -32,26 +32,26 @@ public class AnotherPlayer : MonoBehaviour
 
         if (pressedW && pressedD)
         {
-            characterVelocityInPercent.x = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = NetworkedClientProcessing.gameLogic.CharacterSpeed;
+            characterVelocityInPercent.y = NetworkedClientProcessing.gameLogic.CharacterSpeed;
            
         }
         else if (pressedW && pressedA)
         {
-            characterVelocityInPercent.x = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = -NetworkedClientProcessing.gameLogic.CharacterSpeed;
+            characterVelocityInPercent.y = NetworkedClientProcessing.gameLogic.CharacterSpeed;
 
         }
         else if (pressedS && pressedD)
         {
-            characterVelocityInPercent.x = NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = NetworkedClientProcessing.gameLogic.CharacterSpeed;
+            characterVelocityInPercent.y = -NetworkedClientProcessing.gameLogic.CharacterSpeed;
 
         }
         else if (pressedS && pressedA)
         {
-            characterVelocityInPercent.x = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
-            characterVelocityInPercent.y = -NetworkedClientProcessing.gameLogic.DiagonalCharacterSpeed;
+            characterVelocityInPercent.x = -NetworkedClientProcessing.gameLogic.CharacterSpeed;
+            characterVelocityInPercent.y = -NetworkedClientProcessing.gameLogic.CharacterSpeed;
 
         }
         else if (pressedD)

@@ -43,7 +43,7 @@ static public class NetworkedClientProcessing
                 gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
                 break;
             case ServerToClientSignifiers.HereNewDataForPlayerByTheID:
-                gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
+                //gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
                 break;
             case ServerToClientSignifiers.DestroyCertainPlayer:
                 gameLogic.DestroyByID(int.Parse(csv[1]));
