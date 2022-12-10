@@ -9,13 +9,13 @@ public class AnotherPlayer : MonoBehaviour
     public Vector2 characterPositionInPercent;
     public Vector2 characterVelocityInPercent;
 
-    bool pressedW = false;
-    bool pressedS = false;
-    bool pressedA = false;
-    bool pressedD = false;
-    float CharacterSpeed;
-    float fixedDeltaTime;
-    float DiagonalCharacterSpeed;
+    public bool pressedW = false;
+    public bool pressedS = false;
+    public bool pressedA = false;
+    public bool pressedD = false;
+    public float speed;
+    public float fxdDeltaTime;
+    public float DiagonalCharacterSpeed;
 
     void Start()
     {
@@ -58,16 +58,16 @@ public class AnotherPlayer : MonoBehaviour
 
         }
         else if (pressedD)
-            characterVelocityInPercent.x = CharacterSpeed;
+            characterVelocityInPercent.x = speed;
         else if (pressedA)
-            characterVelocityInPercent.x = -CharacterSpeed;
+            characterVelocityInPercent.x = -speed;
         else if (pressedW)
-            characterVelocityInPercent.y = CharacterSpeed;
+            characterVelocityInPercent.y = speed;
         else if (pressedS)
-            characterVelocityInPercent.y = -CharacterSpeed;
+            characterVelocityInPercent.y = -speed;
 
 
-        characterPositionInPercent += (characterVelocityInPercent * fixedDeltaTime);
+        characterPositionInPercent += (characterVelocityInPercent * speed);
 
         Vector2 screenPos = new Vector2(characterPositionInPercent.x * (float)Screen.width, characterPositionInPercent.y * (float)Screen.height);
         Vector3 characterPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0));
@@ -76,8 +76,8 @@ public class AnotherPlayer : MonoBehaviour
     }
     public void SetVariables(float CharacterSpeed, float fixedDeltaTime)
     {
-        this.CharacterSpeed = CharacterSpeed;
-        this.fixedDeltaTime = fixedDeltaTime;
+        speed = CharacterSpeed;
+        fxdDeltaTime = fixedDeltaTime;
         DiagonalCharacterSpeed = Mathf.Sqrt(CharacterSpeed * CharacterSpeed + CharacterSpeed * CharacterSpeed) / 2f;
     }
 }

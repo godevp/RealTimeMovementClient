@@ -8,7 +8,7 @@ static public class NetworkedClientProcessing
     #region Send and Receive Data Functions
     static public void ReceivedMessageFromServer(string msg)
     {
-        Debug.Log("msg received = " + msg + ".");
+       Debug.Log("msg received = " + msg + ".");
 
         string[] csv = msg.Split('|');
         int signifier = 0;
@@ -24,10 +24,19 @@ static public class NetworkedClientProcessing
                 break;
             case ServerToClientSignifiers.SendBackID:
                 gameLogic.CreateNewCharacter(int.Parse(csv[1]));
+                gameLogic.SetSpeedAndDeltaTimeToThePlayerByIndex(int.Parse(csv[1]));
                 break;
             case ServerToClientSignifiers.NewClientJoined:
                 gameLogic.CreateNewCharacter(int.Parse(csv[1]));
                 gameLogic.SetAnotherPlayer(int.Parse(csv[1]), float.Parse(csv[2]), float.Parse(csv[3]));
+                gameLogic.SetSpeedAndDeltaTimeToThePlayerByIndex(int.Parse(csv[1]));
+                break;
+            case ServerToClientSignifiers.PressButton:
+                gameLogic.SetButtonPressed(int.Parse(csv[1]), csv[2]);
+                gameLogic.SetSpeedAndDeltaTimeToThePlayerByIndex(int.Parse(csv[1]));
+                break;
+            case ServerToClientSignifiers.ReleaseButton:
+                gameLogic.SetButtonReleased(int.Parse(csv[1]), csv[2]);
                 break;
         }
 
@@ -81,7 +90,6 @@ static public class NetworkedClientProcessing
     {
         gameLogic = GameLogic;
     }
-
     #endregion
 
 }
@@ -99,6 +107,8 @@ static public class ServerToClientSignifiers
     public const int RequestForPositionAndGivingSpeed = 1;
     public const int NewClientJoined = 2;
     public const int SendBackID = 3;
+    public const int PressButton = 4;
+    public const int ReleaseButton = 5;
 }
 
 #endregion
