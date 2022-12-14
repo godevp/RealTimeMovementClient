@@ -68,7 +68,7 @@ public class NetworkedClient : MonoBehaviour
             unreliableChannelID = config.AddChannel(QosType.Unreliable);
             HostTopology topology = new HostTopology(config, maxConnections);
             hostID = NetworkTransport.AddHost(topology, 0);
-            connectionID = NetworkTransport.Connect(hostID, "192.168.0.156", socketPort, 0, out error); // server is local on network
+            connectionID = NetworkTransport.Connect(hostID, "10.0.220.132", socketPort, 0, out error); // server is local on network
 
             if (error == 0)
             {

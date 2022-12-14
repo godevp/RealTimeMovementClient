@@ -54,18 +54,22 @@ public class GameLogic : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.W))
         {
             pressedW = true;
+            CheckPessedButtons();
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
             pressedS = true;
+            CheckPessedButtons();
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
             pressedD = true;
+            CheckPessedButtons();
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
             pressedA = true;
+            CheckPessedButtons();
         }
 
         //KeyUp
@@ -73,43 +77,32 @@ public class GameLogic : MonoBehaviour
         {
             pressedW = false;
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "W");
-                                                                           
+
+            CheckPessedButtons();
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
             pressedS = false;
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "S");
-                                                                             
+            CheckPessedButtons();
+
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
             pressedD = false;
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "D");
-                                                                           
+            CheckPessedButtons();
+
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
             pressedA = false;
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A");                                                              
-        }
-
-        if(pressedW && !pressedD && !pressedA)
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "W");
-        }
-        if (pressedS && !pressedD && !pressedA)
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "S");
-        }
-        if (pressedA && !pressedS && !pressedW)
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "A");
-        }
-        if (pressedD && !pressedS && !pressedW)
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "D");
-        }
-
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A");
+            CheckPessedButtons();
+        }        
+    }
+    public void CheckPessedButtons()
+    {
         //
         if (pressedW && pressedA)
         {
@@ -127,6 +120,23 @@ public class GameLogic : MonoBehaviour
         {
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "SA");
         }
+        if (pressedW && !pressedS && !pressedA && !pressedD)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "W");
+        }
+        if (pressedD && !pressedA && !pressedW && !pressedS)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "D");
+        }
+        if (pressedS && !pressedW && !pressedA && !pressedD)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "S");
+        }
+        if (pressedA && !pressedD && !pressedW && !pressedS) 
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "A");
+        }
+
     }
     public void SendPlayersPositionToServer()
     {
@@ -136,6 +146,7 @@ public class GameLogic : MonoBehaviour
                                                         '|' + playersList[0].GetComponent<AnotherPlayer>().characterPositionInPercent.y);
         
     }
+   
     public void SetCertainPlayerPos(int id,float x, float y)
     {
         if(FindPlayerGameObjectByID(id) != null)
