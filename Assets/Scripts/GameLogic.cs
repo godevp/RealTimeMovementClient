@@ -12,7 +12,10 @@ public class GameLogic : MonoBehaviour
     public float CharacterSpeed;
     public float fixedDeltaTime;
     public float DiagonalCharacterSpeed;
-
+    public bool pressedW;
+    public bool pressedS;
+    public bool pressedA;
+    public bool pressedD;
     void Start()
     {
         playersList = new List<GameObject>();
@@ -35,7 +38,7 @@ public class GameLogic : MonoBehaviour
         {
             if (player.GetComponent<AnotherPlayer>().id == id)
             {
-                player.GetComponent<AnotherPlayer>().characterPositionInPercent = new Vector2(posX, posY);
+                player.GetComponent<AnotherPlayer>().characterPositionInPercent += (new Vector2(posX, posY)) * 0.02f ;
             }
         }
     }
@@ -48,65 +51,82 @@ public class GameLogic : MonoBehaviour
     {
         
         //KeyDown
-        if(Input.GetKey(KeyCode.W) &&!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+        if(Input.GetKeyDown(KeyCode.W))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "W");
+            pressedW = true;
         }
-        if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "S");
+            pressedS = true;
         }
-        if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "D");
+            pressedD = true;
         }
-        if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "A");
+            pressedA = true;
         }
-        if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D))
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "WD");
-        }
-        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A))
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "WA");
-        }
-
-        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D))
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "SD");
-        }
-
-        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A))
-        {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "SA");
-        }
-
-
 
         //KeyUp
         if (Input.GetKeyUp(KeyCode.W))
         {
+            pressedW = false;
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "W");
                                                                            
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
+            pressedS = false;
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "S");
                                                                              
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
+            pressedD = false;
             NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "D");
                                                                            
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
-            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A");
-                                                                           
+            pressedA = false;
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.ButtonReleased.ToString() + '|' + "A");                                                              
         }
 
+        if(pressedW && !pressedD && !pressedA)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "W");
+        }
+        if (pressedS && !pressedD && !pressedA)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "S");
+        }
+        if (pressedA && !pressedS && !pressedW)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "A");
+        }
+        if (pressedD && !pressedS && !pressedW)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "D");
+        }
+
+        //
+        if (pressedW && pressedA)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "WA");
+        }
+        if (pressedW && pressedD)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "WD");
+        }
+        if (pressedS && pressedD)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "SD");
+        }
+        if (pressedS && pressedA)
+        {
+            NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.PressedButton.ToString() + '|' + "SA");
+        }
     }
     public void SendPlayersPositionToServer()
     {
@@ -119,7 +139,7 @@ public class GameLogic : MonoBehaviour
     public void SetCertainPlayerPos(int id,float x, float y)
     {
         if(FindPlayerGameObjectByID(id) != null)
-        FindPlayerGameObjectByID(id).GetComponent<AnotherPlayer>().characterPositionInPercent = new Vector2(x, y);
+        FindPlayerGameObjectByID(id).GetComponent<AnotherPlayer>().characterPositionInPercent += (new Vector2(x, y)) * 0.02f;
     }    
    
     public void DestroyByID(int id)
